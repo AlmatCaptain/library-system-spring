@@ -4,10 +4,12 @@ import kz.home.librarysystem.model.Genre;
 import kz.home.librarysystem.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/genres")
 public class GenreController {
 
     private final GenreRepository genreRepository;
@@ -17,11 +19,15 @@ public class GenreController {
         this.genreRepository = genreRepository;
     }
 
-    public List<Genre> findAll(){
+    @GetMapping("")
+    public List<Genre> findAll() {
         return genreRepository.findAll();
     }
 
-    public Genre findById(Long id){
+    @GetMapping("/{id}")
+    public Genre findById(@PathVariable("id") Long id) {
         return genreRepository.findById(id).get();
     }
+
+
 }

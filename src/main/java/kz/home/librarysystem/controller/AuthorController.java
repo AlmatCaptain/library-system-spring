@@ -4,10 +4,15 @@ import kz.home.librarysystem.model.Author;
 import kz.home.librarysystem.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/authors")
 public class AuthorController {
 
     private final AuthorRepository authorRepository;
@@ -17,10 +22,15 @@ public class AuthorController {
         this.authorRepository = authorRepository;
     }
 
-    public List<Author> findAll(){
+    @GetMapping("")
+    public List<Author> findAll() {
         return authorRepository.findAll();
     }
-    public Author findById(Long id){
+
+    @GetMapping("/{id}")
+    public Author findById(@PathVariable("id") Long id) {
         return authorRepository.findById(id).get();
     }
+
+
 }

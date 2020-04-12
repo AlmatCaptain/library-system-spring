@@ -11,7 +11,7 @@ public class Member {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<BookTransaction> borrowedBooks;
 
     public Member() {

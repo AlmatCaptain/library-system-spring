@@ -1,5 +1,7 @@
 package kz.home.librarysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -18,10 +20,12 @@ public class BookTransaction {
     @Column(name = "due_date")
     private LocalDate dueDate;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", insertable = false, updatable = false)
     private Member member;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "book_id", insertable = false, updatable = false)
     private Book book;

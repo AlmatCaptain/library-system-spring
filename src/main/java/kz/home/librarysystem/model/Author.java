@@ -1,5 +1,7 @@
 package kz.home.librarysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class Author {
     private Long id;
     private String name;
 
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "authorList", fetch = FetchType.LAZY)
     private List<Book> bookList;
 
@@ -28,6 +32,14 @@ public class Author {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Book> getBookList() {
+        return bookList;
+    }
+
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
     }
 
     @Override

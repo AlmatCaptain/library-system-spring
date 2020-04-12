@@ -1,8 +1,8 @@
 package kz.home.librarysystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 @Entity
@@ -26,9 +26,11 @@ public class Book {
     @Column(name = "genre_id")
     private Long genreId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "genre_id", insertable = false, updatable = false)
     private Genre genre;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "book_author",
@@ -37,6 +39,7 @@ public class Book {
     )
     private List<Author> authorList;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private List<BookTransaction> issuedBooks;
 
