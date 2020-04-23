@@ -17,61 +17,44 @@ import java.util.stream.Collectors;
 
 public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
 
-		// 1. get the authentication header. Tokens are supposed to be passed in the authentication header
-		String header = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-		// 2. validate the header and check the prefix
-		if(header == null || !header.startsWith("Bearer ")) {
-			chain.doFilter(request, response);  		// If not valid, go to the next filter.
-			return;
-		}
+        if (header == null || !header.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-		// If there is no token provided and hence the user won't be authenticated.
-		// It's Ok. Maybe the user accessing a public path or asking for a token.
+        String token = header.replace("Bearer ", "");
 
-		// All secured paths that needs a token are already defined and secured in config class.
-		// And If user tried to access without access token, then he won't be authenticated and an exception will be thrown.
+        try {
 
-		// 3. Get the token
-		String token = header.replace("Bearer ", "");
+            Claims claims = Jwts.parser()
+                    .setSigningKey("secret-key".getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
 
-		try {	// exceptions might be thrown in creating the claims if for example the token is expired
+            String username = claims.getSubject();
+            if (username != null) {
+                @SuppressWarnings("unchecked")
+                List<String> authorities = (List<String>) claims.get("authorities");
 
-			// 4. Validate the token
-			Claims claims = Jwts.parser()
-					.setSigningKey("secret-key".getBytes())
-					.parseClaimsJws(token)
-					.getBody();
+                System.out.println("authorities = " + authorities);
 
-			String username = claims.getSubject();
-			if(username != null) {
-				@SuppressWarnings("unchecked")
-				List<String> authorities = (List<String>) claims.get("authorities");
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
-				System.out.println("authorities = " + authorities);
 
-				// 5. Create auth object
-				// UsernamePasswordAuthenticationToken: A built-in object, used by spring to represent the current authenticated / being authenticated user.
-				// It needs a list of authorities, which has type of GrantedAuthority interface, where SimpleGrantedAuthority is an implementation of that interface
-				 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-								 username, null, authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
 
-				 // 6. Authenticate the user
-				 // Now, user is authenticated
-				 SecurityContextHolder.getContext().setAuthentication(auth);
-			}
-
-		} catch (Exception e) {
-			// In case of failure. Make sure it's clear; so guarantee user won't be authenticated
-			SecurityContextHolder.clearContext();
-		}
-
-		// go to the next filter in the filter chain
-		chain.doFilter(request, response);
-	}
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+        }
+        chain.doFilter(request, response);
+    }
 
 }

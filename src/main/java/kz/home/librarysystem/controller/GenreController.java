@@ -26,8 +26,7 @@ public class GenreController {
 
     @GetMapping("/{id}")
     public Genre findById(@PathVariable("id") Long id) {
-        return genreRepository.findById(id).get();
+        return genreRepository.findById(id)
+                              .get();
     }
-
-
 }

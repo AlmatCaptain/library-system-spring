@@ -29,7 +29,8 @@ public class AuthorController {
 
     @GetMapping("/{id}")
     public Author findById(@PathVariable("id") Long id) {
-        return authorRepository.findById(id).get();
+        return authorRepository.findById(id)
+                               .get();
     }
 
 

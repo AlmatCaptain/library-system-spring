@@ -16,7 +16,7 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private BookStatus bookStatus;
 
-    public enum BookStatus{
+    public enum BookStatus {
         REQUESTED,
         ISSUED,
         AVAILABLE,

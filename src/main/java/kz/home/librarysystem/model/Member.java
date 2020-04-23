@@ -16,7 +16,7 @@ public class Member implements UserDetails {
     private String username;
     private String password;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<BookTransaction> borrowedBooks;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -45,9 +45,6 @@ public class Member implements UserDetails {
         return username;
     }
 
-    public void setName(String username) {
-        this.username = username;
-    }
 
     public List<BookTransaction> getBorrowedBooks() {
         return borrowedBooks;
@@ -76,7 +73,15 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -99,9 +104,6 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     @Override
     public String toString() {

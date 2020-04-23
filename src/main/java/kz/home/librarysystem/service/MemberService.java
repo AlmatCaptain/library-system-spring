@@ -1,6 +1,5 @@
 package kz.home.librarysystem.service;
 
-import kz.home.librarysystem.controller.BookController;
 import kz.home.librarysystem.model.Member;
 import kz.home.librarysystem.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ public class MemberService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-
     public List<Member> getAllUsers() {
         return memberRepository.findAll();
     }
@@ -39,5 +37,33 @@ public class MemberService implements UserDetailsService {
             throw new UsernameNotFoundException("Member: " + name + " not found!");
         }
         return member;
+    }
+
+    public void updateMember(Long id, Member member) {
+        Member member1 = memberRepository.findById(id)
+                                         .orElse(null);
+
+        if (member1 != null) {
+            member1.setUsername(member.getUsername());
+            member1.setPassword(member.getPassword());
+
+            memberRepository.saveAndFlush(member1);
+        }
+    }
+
+    public void updateUserName(Long id, String name) {
+        Member member = memberRepository.findById(id)
+                                        .get();
+        member.setUsername(name);
+        memberRepository.saveAndFlush(member);
+    }
+
+    public void deleteMemberById(Long id) {
+        memberRepository.deleteById(id);
+    }
+
+    public Member getMemberById(Long id) {
+        return memberRepository.findById(id)
+                               .get();
     }
 }
