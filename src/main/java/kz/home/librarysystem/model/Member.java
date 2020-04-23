@@ -1,5 +1,9 @@
 package kz.home.librarysystem.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,6 +12,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@ToString(exclude = {"roles"})
+@NoArgsConstructor
 public class Member implements UserDetails {
 
     @Id
@@ -26,47 +34,17 @@ public class Member implements UserDetails {
     )
     private List<Role> roles;
 
-    public Member() {
-    }
-
     public Member(String username) {
         this.username = username;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return username;
-    }
-
-
-    public List<BookTransaction> getBorrowedBooks() {
-        return borrowedBooks;
-    }
-
-    public void setBorrowedBooks(List<BookTransaction> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
-
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -74,14 +52,6 @@ public class Member implements UserDetails {
     @Override
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
@@ -102,16 +72,6 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", name='" + username + '\'' +
-                ", borrowedBooks=" + borrowedBooks +
-                '}';
     }
 
 
